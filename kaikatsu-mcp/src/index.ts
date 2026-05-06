@@ -14,7 +14,7 @@ export class KaikatsuMcp extends McpAgent {
       "lookup_store",
       {
         description:
-          "快活CLUBの店舗をキーワード(店名/都道府県/市区町村/住所/店舗コード)で部分一致AND検索する。「北海道 旭川」のように複数語で絞り込み可能。",
+          "快活CLUBの店舗をキーワード(店名/都道府県/市区町村/住所/店舗コード)で部分一致AND検索する。「北海道 旭川」のように複数語で絞り込み可能。結果には対応サービス・シート・遊び情報も含む。",
         inputSchema: {
           keywords: z
             .array(z.string())
