@@ -1,7 +1,5 @@
-import { readFileSync } from "node:fs";
-import { fileURLToPath } from "node:url";
-import got from "got";
 import * as z from "zod";
+import storesRaw from "../../assets/stores.json" with { type: "json" };
 import { api_key, endpoint } from "./get-endpoint.js";
 
 const StoreSchema = z.object({
@@ -16,16 +14,10 @@ const StoreSchema = z.object({
 
 type Store = z.infer<typeof StoreSchema> & { prefecture: string };
 
-const storesPath = fileURLToPath(
-  new URL("../../assets/stores.json", import.meta.url),
-);
-const storesRaw = JSON.parse(readFileSync(storesPath, "utf-8")) as Record<
-  string,
-  unknown[]
->;
-const ALL_STORES: Store[] = Object.entries(storesRaw).flatMap(
-  ([prefecture, list]) =>
-    list.map((s) => ({ ...StoreSchema.parse(s), prefecture })),
+const ALL_STORES: Store[] = Object.entries(
+  storesRaw as Record<string, unknown[]>,
+).flatMap(([prefecture, list]) =>
+  list.map((s) => ({ ...StoreSchema.parse(s), prefecture })),
 );
 
 const VacancySchema = z.object({
@@ -58,18 +50,24 @@ export class Kaikatsu {
   constructor() {}
 
   async checkVacancy(storeId: string): Promise<Vacancy> {
-    let body: unknown;
+    let res: Response;
     try {
-      body = await got(`${endpoint}${encodeURIComponent(storeId)}`, {
+      res = await fetch(`${endpoint}${encodeURIComponent(storeId)}`, {
         headers: { "x-api-key": api_key },
-      }).json();
+      });
     } catch (err) {
       throw new KaikatsuError(
         `Failed to fetch vacancy for store ${storeId}`,
         err as Error,
       );
     }
+    if (!res.ok) {
+      throw new KaikatsuError(
+        `Vacancy API returned ${res.status} for store ${storeId}`,
+      );
+    }
 
+    const body = await res.json();
     const parsed = VacancySchema.safeParse(body);
     if (!parsed.success) {
       throw new KaikatsuError(

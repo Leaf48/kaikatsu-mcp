@@ -1,5 +1,3 @@
-import got from "got";
-
 // const JS_FILE = "https://www.kaikatsu.jp/common/js/shop_vacancy.js";
 
 // export async function getEndpoint(): Promise<{

@@ -5,8 +5,8 @@ const main = async () => {
   //
   console.log(endpoint, api_key);
   const kaikatsu = new Kaikatsu();
-  const res = await kaikatsu.checkVacancy("");
-  // const res = await kaikatsu.lookupStore(["北海道", "条西"]);
+  // const res = await kaikatsu.checkVacancy("");
+  const res = await kaikatsu.lookupStore(["北海道", "条西"]);
   console.log(res);
 };
 
