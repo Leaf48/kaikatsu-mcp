@@ -14,7 +14,7 @@ export class KaikatsuMcp extends McpAgent {
       "lookup_store",
       {
         description:
-          "快活CLUBの店舗をキーワード(店名/都道府県/市区町村/住所/店舗コード)で部分一致AND検索する。「北海道 旭川」のように複数語で絞り込み可能。結果には対応サービス・シート・遊び情報も含む。",
+          "快活CLUBの店舗をキーワード(店名/都道府県/市区町村/住所/店舗コード)で部分一致AND検索する。「北海道 旭川」のように複数語で絞り込み可能。結果には対応サービス・シート・遊び情報も含む。※1&2カラオケはヒトカラとも言われる",
         inputSchema: {
           keywords: z
             .array(z.string())
@@ -47,9 +47,7 @@ export class KaikatsuMcp extends McpAgent {
         description:
           "店舗コード(store_code)を指定してリアルタイムの空席情報を取得する。store_codeはlookup_storeで先に取得すること。",
         inputSchema: {
-          store_code: z
-            .string()
-            .describe("快活CLUBの店舗コード。例: '20176'"),
+          store_code: z.string().describe("快活CLUBの店舗コード。例: '20176'"),
         },
       },
       async ({ store_code }) => {
